@@ -1,5 +1,5 @@
 import React from 'react'
-import XButton from '../common/xbutton/xbutton';
+import XButton from '../common/xui/xbutton';
 
 class InvoiceItem extends React.Component {
     constructor(props) {
@@ -7,6 +7,7 @@ class InvoiceItem extends React.Component {
 
         this.state = {
             id: props.id,
+            _id: props.id,
             name: props.name,
             price: props.price,
             quantity: props.quantity,
@@ -23,7 +24,6 @@ class InvoiceItem extends React.Component {
     render() {
         return (
             <tr>
-                <td>{this.id}</td>
                 <td>{this.state.name}</td>
                 <td>{this.state.quantity}</td>
                 <td>${this.state.price}</td>

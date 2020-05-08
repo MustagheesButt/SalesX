@@ -1,9 +1,12 @@
 import React from 'react'
 import InvoiceItem from './InvoiceItem'
-import XButton from '../common/xbutton/xbutton'
+import XButton from '../common/xui/xbutton'
 
-import notificationService from '../../services/notificationService'
+import notificationService, { CASH_IN } from '../../services/notificationService'
 import http from '../../services/httpService'
+import authService from '../../services/authService'
+import XInput from '../common/xui/xinput'
+import XSelect from '../common/xui/xselect'
 
 class Invoice extends React.Component {
     constructor(props) {
@@ -21,7 +24,7 @@ class Invoice extends React.Component {
 
     render() {
         return (
-            <section className="invoice card depth-3">
+            <section className="invoice card depth-2">
                 {(this.state.items.length === 0) ? this.renderNoItems() : this.renderItems()}
             </section>
         )
@@ -40,14 +43,17 @@ class Invoice extends React.Component {
             return notificationService.alertDanger('Not enough funds to complete transaction!')
 
         try {
-            const result = await http.post('/transactions', {
+            await http.post('/invoices', {
                 items: this.state.items,
                 discount: this.state.discount,
                 paymentMethod: this.state.paymentMethod,
-                amountPaid: this.state.amountPaid
+                amountPaid: this.state.amountPaid,
+                employeeId: authService.getCurrentUser()._id,
+                branchId: authService.getCurrentUser().branchId
             })
-            console.log(result)
-            notificationService.alertSuccess('Transaction Complete')
+
+            notificationService.alertSuccess('Transaction completed!')
+            notificationService.alertAudio(CASH_IN)
             this.reset()
         } catch ({ response }) {
             console.log(response)
@@ -104,6 +110,7 @@ class Invoice extends React.Component {
         } else {
             const newItem = itemData
             newItem.quantity = 1
+            newItem.discount = 0
             this.setState({ items: [...this.state.items, newItem] })
         }
     }
@@ -119,7 +126,7 @@ class Invoice extends React.Component {
     renderItems() {
         const total = this.calculateTotalPayment()
         const items = this.state.items.map((item, index) => {
-            return <InvoiceItem key={item.id} id={item.id} name={item.name} price={item.price} quantity={item.quantity} discount={0} removeHandler={() => this.remove(index)} />
+            return <InvoiceItem key={item.id} id={item.id} _id={item._id} name={item.name} price={item.price} quantity={item.quantity} discount={item.discount} removeHandler={() => this.remove(index)} />
         })
 
         const paymentOptions = this.state.paymentMethods.map((item, index) => {
@@ -150,15 +157,11 @@ class Invoice extends React.Component {
                 </div>
 
                 <div>
-                    <h4>Payment Method</h4>
-                    <select onChange={(e) => this.setPaymentMethod(e.target.selectedIndex)}>
-                        {paymentOptions}
-                    </select>
+                    <XSelect options={paymentOptions} label='Payment Method' onChange={(e) => this.setPaymentMethod(e.target.selectedIndex)} />
                 </div>
 
                 <div>
-                    <h4>Customer paid</h4>
-                    <input type='number' value={this.state.amountPaid} min='0' onChange={(e) => this.setState({ amountPaid: e.target.value })} />
+                    <XInput type='number' label='Customer Paid' value={this.state.amountPaid} min='0' onChange={(e) => this.setState({ amountPaid: e.target.value })} />
                 </div>
 
                 <div>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import XButton from '../../components/common/xbutton/xbutton'
+import XButton from '../../components/common/xui/xbutton'
 
 import http from '../../services/httpService'
 
@@ -21,17 +21,19 @@ class Prelude extends React.Component {
 
         this.dotsIntervalRef = null
 
-        this.stuffToPerform = [this.testEnvironment, this.testDbConnection, this.testTables]
+        this.stuffToPerform = [this.testDbConnection, this.testTables, this.checkSession]
     }
 
-    testEnvironment = async () => {
-        this.setState({ status: 'checking environment', statusCode: 'PENDING' })
+    checkSession = async () => {
+        this.setState({ status: 'checking session state', statusCode: 'PENDING' })
 
         try {
-            const { data } = await http.get(apiEndpoint + '/environment')
+            const { data } = await http.get(apiEndpoint + '/session')
 
-            if (data === 'OK') {
-                this.setState({ status: 'environment OK', statusCode: 'OK' })
+            if (data === 'OK session found') {
+                this.setState({ status: 'session restored', statusCode: 'OK' })
+            } else if (data === 'OK session not found') {
+                this.setState({ status: 'no session found', statusCode: 'OK' })
             }
 
             return data
@@ -101,7 +103,7 @@ class Prelude extends React.Component {
                     <p className={`${this.state.statusCode === 'FAIL' ? 'fail' : ''}`}>{this.state.status}{this.state.dots}</p>
                     {this.state.statusCode === 'FAIL' ?
                         <div>
-                            <h2>Please contact info@example.com or retry.</h2>
+                            <h2>Please contact salesx.support@nezuco.com or retry.</h2>
                             <XButton text='RETRY' clickHandler={e => {
                                 window.location.reload()
                             }} />

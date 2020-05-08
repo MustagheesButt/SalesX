@@ -36,7 +36,7 @@ footer {
     bottom: 0;
     padding: 10px 0;
     width: 100%;
-    background-color: crimson;
+    background-color: #5198e2;
 }
 
 main {
@@ -58,23 +58,6 @@ section.card {
 
 .depth-3 {
     background-color: #2f2e2e;
-}
-
-input {
-    width: 100%;
-    background-color: #121212;
-    color: #c2c2c2;
-    margin-bottom: 5px;
-    padding: 5px 0 2px 5px;
-    text-align: center;
-    border-radius: 25px;
-    border: none;
-    transition: 1s;
-}
-
-input:focus {
-    box-shadow: 0 0 4px #ffffff;
-    outline: none;
 }
 
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {

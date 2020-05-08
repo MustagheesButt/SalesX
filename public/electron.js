@@ -11,6 +11,7 @@ function createWindow(pageSrc, { bg = '#ffffff', frame = true, show = true, tran
         frame: frame,
         show: show,
         transparent: transparent,
+        icon: path.join(__dirname, 'assets/icon.png'),
         webPreferences: {
             nodeIntegration: true,
             preload: __dirname + '/preload.js'

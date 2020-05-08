@@ -4,14 +4,14 @@ import authService from '../../services/authService'
 
 import Main from '../../components/templates/Main'
 import VideoDeviceSelector from '../../components/VideoDeviceSelector/VideoDeviceSelector'
-import XButton from '../../components/common/xbutton/xbutton'
+import XButton from '../../components/common/xui/xbutton'
 
 import './Settings.css'
 
 class Settings extends React.Component {
 
-    logout() {
-        authService.logout()
+    async logout() {
+        await authService.logout()
         window.location = '/#/dashboard'
     }
 
@@ -21,13 +21,13 @@ class Settings extends React.Component {
         return (
             <Main>
                 <main>
-                    <section class='card depth-3 video-selector'>
+                    <section className='card depth-2 video-selector'>
                         <h3>Barcode Scanning Configuration</h3>
 
                         <VideoDeviceSelector />
                     </section>
 
-                    <section class='card depth-3 employee-account'>
+                    <section className='card depth-2 employee-account'>
                         <h3>Logged in as</h3>
 
                         <div>

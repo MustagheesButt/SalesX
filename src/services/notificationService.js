@@ -1,4 +1,7 @@
 import { toast } from 'react-toastify'
+
+import audioService from './audioService'
+
 import 'react-toastify/dist/ReactToastify.min.css'
 
 toast.configure()
@@ -19,9 +22,15 @@ function alertDanger(msg) {
     toast.error(msg)
 }
 
+export const CASH_IN = 'cash_in.mp3'
+function alertAudio(name) {
+    audioService.play(name)
+}
+
 export default {
     alertInfo,
     alertWarning,
     alertSuccess,
-    alertDanger
+    alertDanger,
+    alertAudio
 }

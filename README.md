@@ -10,6 +10,12 @@ To setup and run the program:
 
 1. Make sure you have NodeJS installed and updated.
 2. MySQL installed and running.
+3. Create a new MySQL user `salesx` using the following query:
+
+    `CREATE USER 'salesx'@'localhost' IDENTIFIED WITH mysql_native_password BY '<password>';`
+
+    Use the same password in `public/config.json`.
+
 3. From the project root directory, run:
 
     `npm install`

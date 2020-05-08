@@ -4,6 +4,7 @@ import http from '../../services/httpService'
 
 import Item from './Item/Item'
 import VideoScanner from '../../components/common/VideoScanner/VideoScanner'
+import XInput from '../../components/common/xui/xinput'
 
 import './Items.css'
 
@@ -27,36 +28,48 @@ class Items extends React.Component {
     }
 
     render() {
+        return (
+            <React.Fragment>
+                <VideoScanner />
+
+                <section className='items-list card depth-2'>
+                    <XInput placeholder='Filter items' onChange={e => this.updateFilter(e)} />
+
+                    {this.renderTable()}
+                </section>
+            </React.Fragment>
+        )
+    }
+
+    renderTable() {
         const items = this.state.items.filter(item => {
             if (item.name.toLowerCase().indexOf(this.state.filter) === -1)
                 return false
             return true
         }).map(item => {
-            return <Item key={item.id} id={item.id} name={item.name} price={item.price} />
+            return <Item key={item.id} id={item.id} _id={item._id} name={item.name} price={item.price} />
         })
 
-        return (
-            <React.Fragment>
-                <VideoScanner />
-
-                <section className='items-list card depth-3'>
-                    <input type='text' className='filter' onChange={e => this.updateFilter(e)} placeholder='Type here to filter items' />
-
-                    <table className='items-table'>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {items}
-                        </tbody>
-                    </table>
-                </section>
-            </React.Fragment>
-        )
+        if (items.length === 0) {
+            return (
+                <p>It looks like you don't have any items, or they are taking too long to load. Please contact your management.</p>
+            )
+        } else {
+            return (
+                <table className='items-table'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items}
+                    </tbody>
+                </table>
+            )
+        }
     }
 
     updateFilter(event) {

@@ -15,6 +15,16 @@
     box-shadow: 0 0 5px #00ff00;
 }
 
+.status-light > .standby {
+    background-color: #f7990c;
+    box-shadow: 0 0 5px #ffe600;
+}
+
+.status-light > .error {
+    background-color: #f70c0c;
+    box-shadow: 0 0 5px #ff5741;
+}
+
 .status-light > .in-progress {
     box-shadow: 0 0 5px #00ff00;
     animation: in-progress;

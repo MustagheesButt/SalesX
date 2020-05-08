@@ -3,8 +3,8 @@ import Joi from '@hapi/joi'
 
 import notificationService from '../../../services/notificationService'
 
-import XInput from '../xinput/xinput'
-import XButton from '../xbutton/xbutton'
+import XInput from '../xui/xinput'
+import XButton from '../xui/xbutton'
 
 import './form.css'
 

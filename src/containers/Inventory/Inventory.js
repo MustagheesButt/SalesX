@@ -1,8 +1,9 @@
 import React from 'react'
 
-import Main from '../../components/templates/Main'
-
 import http from '../../services/httpService'
+
+import Main from '../../components/templates/Main'
+import XInput from '../../components/common/xui/xinput'
 
 import './Inventory.css'
 
@@ -22,13 +23,17 @@ class Settings extends React.Component {
     }
 
     async getItemsAndInventory() {
-        const items = await http.get('/items')
-        const inventory = await http.get('/inventory')
+        try {
+            const { data: items } = await http.get('/items')
+            const { data: inventory } = await http.get('/inventory')
 
-        this.setState({
-            items: items.data,
-            inventory: inventory.data
-        })
+            this.setState({
+                items,
+                inventory
+            })
+        } catch (ex) {
+            console.log(ex)
+        }
     }
 
     render() {
@@ -42,7 +47,7 @@ class Settings extends React.Component {
                     <td>{item.id}</td>
                     <td>{item.barcode}</td>
                     <td>{item.name}</td>
-                    <td>{this.state.inventory[index].quantity}</td>
+                    <td>{this.state.inventory[index]?.quantity || 0}</td>
                 </tr>
             )
         })
@@ -50,25 +55,34 @@ class Settings extends React.Component {
         return (
             <Main>
                 <main>
-                    <section className='inventory card depth-3'>
-                        <input type='text' className='filter' onChange={e => this.updateFilter(e)} placeholder='Type here to filter items' />
+                    <section className='inventory card depth-2'>
+                        <XInput onChange={e => this.updateFilter(e)} placeholder='Filter items' />
 
-                        <table className='items-table'>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Barcode</th>
-                                    <th>Name</th>
-                                    <th>Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {inventoryItems}
-                            </tbody>
-                        </table>
+                        {
+                            (this.state.filter.length > 0 && inventoryItems.length === 0) ?
+                                'No items match your search.' : this.renderTable(inventoryItems)
+                        }
                     </section>
                 </main>
             </Main>
+        )
+    }
+
+    renderTable(inventoryItems) {
+        return (
+            <table className='items-table'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Barcode</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {inventoryItems}
+                </tbody>
+            </table>
         )
     }
 

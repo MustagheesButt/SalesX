@@ -14,7 +14,8 @@ function loginWithJwt(jwt) {
     localStorage.setItem('jwt', jwt)
 }
 
-function logout() {
+async function logout() {
+    await http.get(`${apiEndpoint}/logout`)
     localStorage.removeItem('jwt')
 }
 

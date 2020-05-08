@@ -1,3 +1,9 @@
 {
-    "videoInputDevice": null
+    "db": {
+        "host": "localhost",
+        "username": "salesx",
+        "password": "salesx"
+    },
+    "videoInputDevice": null,
+    "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg4OGFlZWMyMTU1NDY0OWNlMTU3ZDEiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicGhvbmVOdW1iZXIiOiIiLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJicmFuZElkIjoiNWU4Nzc2M2QxMGIyMDMxMTUyMmNlNmZmIiwiYnJhbmNoSWQiOiI1ZTg4NGIxOTU1ODZmOTQ5YjMwMTM0MGUiLCJpYXQiOjE1ODg1ODEwMzV9.MtP2acnZgjKvqylCpl71SnwjfSQyVSSyYRSMHm5J22A"
 }

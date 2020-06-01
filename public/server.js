@@ -8,12 +8,13 @@ const io = require('socket.io')(server)
 const cors = require('cors')
 
 const knex = require('./services/dbService')
+const http = require('./services/httpService')
 
 const prelude = require('./routes/prelude')
-const status = require('./routes/status')
 const auth = require('./routes/auth')
 const items = require('./routes/items')
 const invoices = require('./routes/invoices')
+const inventory = require('./routes/inventory')
 
 const PORT = 3005
 
@@ -25,23 +26,13 @@ app.use(express.json())
 
 /* Routes */
 app.use('/prelude', prelude)
-app.use('/status', status)
 app.use('/auth', auth)
 app.use('/items', items)
 app.use('/invoices', invoices)
+app.use('/inventory', inventory)
 
 app.get('/', (req, res) => {
     res.send('Hello world')
-})
-
-app.get('/inventory', (req, res) => {
-    let result = knex.select('*').from('Inventory')
-    result.then((rows) => {
-        console.log(rows)
-        res.send(rows)
-    }, function (err) {
-        res.send(err)
-    })
 })
 
 /* Configuration API */
@@ -66,6 +57,24 @@ setInterval(function () {
     syncService.syncItems()
 }, 10000)
 
+/* Status provider */
+io.on('connection', (socket) => {
+    syncService.setSocket(socket)
+
+    setInterval(() => {
+        http.get('/')
+            .then(({ data }) => {
+                socket.emit('cloud-connection-state-change', 'ok')
+            })
+            .catch((ex) => {
+                socket.emit('cloud-connection-state-change', 'error')
+            })
+    }, 5000)
+})
+
+server.listen(PORT, () => console.log(`Express server listening on port ${PORT}`))
+
+/* Global utility */
 global.readJson = function (fileName) {
     const rawdata = fs.readFileSync(path.join(__dirname, fileName))
     return JSON.parse(rawdata)
@@ -81,7 +90,5 @@ global.writeJson = function (fileName, data) {
 
     fs.writeFileSync(path.join(__dirname, fileName), JSON.stringify(json, null, 4))
 }
-
-server.listen(PORT, () => console.log(`Express server listening on port ${PORT}`))
 
 module.exports = app

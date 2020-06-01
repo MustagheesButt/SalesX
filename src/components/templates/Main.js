@@ -4,7 +4,8 @@ import { NavLink } from 'react-router-dom'
 import XButton from '../common/xui/xbutton'
 import StatusLight from '../common/StatusLight/StatusLight'
 
-import http from '../../services/httpService'
+//import http from '../../services/httpService'
+import io from 'socket.io-client'
 import authService from '../../services/authService'
 
 class Main extends React.Component {
@@ -16,7 +17,7 @@ class Main extends React.Component {
                 status: 'standby',
                 msg: 'Ready to sync any changes'
             },
-            connection: {
+            cloud: {
                 status: 'error',
                 msg: 'Failed to establish a connection' // 'Secure & Ready'
             }
@@ -24,8 +25,8 @@ class Main extends React.Component {
     }
 
     componentDidMount() {
-        setInterval(async () => {
-            const { data } = await http.get('/status/sync')
+        const socket = io(process.env.REACT_APP_API_URL)
+        socket.on('sync-status-change', (data) => {
             let syncState = {}
             if (data === 'error') {
                 syncState = {status: 'error', msg: 'Failed to sync'}
@@ -35,7 +36,17 @@ class Main extends React.Component {
                 syncState = {status: 'standby', msg: 'Ready to sync'}
             }
             this.setState({ syncing: syncState })
-        }, 500)
+        })
+
+        socket.on('cloud-connection-state-change', (data) => {
+            let cloudState = {}
+            if (data === 'error') {
+                cloudState = {status: 'error', msg: 'Failed to establish a connection'}
+            } else if (data === 'ok') {
+                cloudState = {status: 'ok', msg: 'Connected :)'}
+            }
+            this.setState({ cloud: cloudState })
+        })
     }
 
     render() {
@@ -53,7 +64,7 @@ class Main extends React.Component {
     
                 <footer>
                     <StatusLight state={this.state.syncing.status} label='syncing' tooltip={this.state.syncing.msg} />
-                    <StatusLight state={this.state.connection.status} label='cloud connection' tooltip={this.state.connection.msg} />
+                    <StatusLight state={this.state.cloud.status} label='cloud connection' tooltip={this.state.cloud.msg} />
                 </footer>
             </div>
         )

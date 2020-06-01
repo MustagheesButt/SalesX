@@ -27,7 +27,7 @@ class Item extends React.Component {
             <tr className='item'>
                 <td>{this.state.name}</td>
                 <td>{this.state.price}</td>
-                <td>-1</td>
+                <td>{this.state.quantity}</td>
                 <td><XButton text='Add' clickHandler={() => this.itemClicked()} title='Click to add to invoice' /></td>
             </tr>
         )

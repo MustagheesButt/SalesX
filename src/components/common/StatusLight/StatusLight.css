@@ -10,7 +10,7 @@
     vertical-align: middle;
 }
 
-.status-light > .green {
+.status-light > .ok {
     background-color: #01a701;
     box-shadow: 0 0 5px #00ff00;
 }

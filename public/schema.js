@@ -43,6 +43,8 @@ const tables = {
     'meta_info': function(table) {
         table.text('authToken')
         table.datetime('items_synced_at')
+        table.datetime('invoices_synced_at')
+        table.datetime('inventory_synced_at')
     }
 }
 

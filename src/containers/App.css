@@ -13,7 +13,7 @@ html {
     grid-template-rows: 50px 1fr 50px;
 }
 
-.flex-container {
+.d-flex {
     display: flex;
 }
 

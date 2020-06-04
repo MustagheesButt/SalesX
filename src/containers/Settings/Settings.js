@@ -10,8 +10,8 @@ import './Settings.css'
 
 class Settings extends React.Component {
 
-    async logout() {
-        await authService.logout()
+    logout() {
+        authService.logout()
         window.location = '/#/dashboard'
     }
 

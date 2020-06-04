@@ -1,6 +1,6 @@
 import React from 'react'
 
-import http from '../../services/httpService'
+import dbService from '../../services/dbService'
 
 import Main from '../../components/templates/Main'
 import XInput from '../../components/common/xui/xinput'
@@ -24,30 +24,40 @@ class Settings extends React.Component {
 
     async getItemsAndInventory() {
         try {
-            const { data: items } = await http.get('/items')
-            const { data: inventory } = await http.get('/inventory')
+            const itemSchema = dbService.table('Item')
+            const inventorySchema = dbService.table('Inventory')
 
-            this.setState({
-                items,
-                inventory
-            })
+            const items = await dbService.getDb().select().from(itemSchema).exec()
+            const inventory = await dbService.getDb().select().from(inventorySchema).exec()
+
+            this.setState({ items, inventory })
         } catch (ex) {
             console.log(ex)
         }
     }
 
     render() {
+        if (this.state.items.length === 0)
+            return (
+                <Main>
+                    <main>
+                        <section className='inventory card depth-2'>
+                            <p>No inventory items to display.</p>
+                        </section>
+                    </main>
+                </Main>
+            )
+
         const inventoryItems = this.state.items.filter(item => {
-            if (item.name.toLowerCase().indexOf(this.state.filter) === -1)
-                return false
-            return true
+            const filterValue = this.state.filter.toLowerCase()
+            return !(item.name.toLowerCase().indexOf(filterValue) === -1 && item.id.indexOf(filterValue) === -1 && item.barcode.indexOf(filterValue) === -1)
         }).map((item, index) => {
             return (
                 <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.barcode}</td>
                     <td>{item.name}</td>
-                    <td>{this.state.inventory[index]?.quantity || 0}</td>
+                    <td>{this.state.inventory[index]?.quantity || 'N/A'}</td>
                 </tr>
             )
         })
@@ -58,9 +68,8 @@ class Settings extends React.Component {
                     <section className='inventory card depth-2'>
                         <XInput onChange={e => this.updateFilter(e)} placeholder='Filter items' />
 
-                        {
-                            (this.state.filter.length > 0 && inventoryItems.length === 0) ?
-                                'No items match your search.' : this.renderTable(inventoryItems)
+                        {(inventoryItems.length === 0) ?
+                            'No items match your search.' : this.renderTable(inventoryItems)
                         }
                     </section>
                 </main>

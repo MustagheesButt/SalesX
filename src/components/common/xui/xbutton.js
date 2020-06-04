@@ -2,9 +2,14 @@ import React from 'react'
 
 import './xbutton.css'
 
-const XButton = ({clickHandler, text, ...rest}) => {
+const XButton = ({ to, clickHandler, text, type, ...rest }) => {
     return (
-        <span className='btn' onClick={clickHandler} {...rest}>{text}</span>
+        <button
+            className={type ? `btn btn-${type}` : 'btn btn-default'}
+            onClick={clickHandler}
+            {...rest}>
+            {text || rest.children}
+        </button>
     )
 }
 

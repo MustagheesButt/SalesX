@@ -10,6 +10,7 @@ class Item extends React.Component {
             _id: props._id,
             name: props.name,
             price: props.price,
+            quantity: props.quantity,
             barcode: props.barcode
         }
     }

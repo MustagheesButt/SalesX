@@ -3,6 +3,7 @@ import React from 'react'
 import XButton from '../../components/common/xui/xbutton'
 
 import http from '../../services/httpService'
+import dbService from '../../services/dbService'
 
 import './Prelude.css'
 
@@ -83,11 +84,12 @@ class Prelude extends React.Component {
             this.setState({ dots })
         }, 1000)
 
-        for (var i = 0; i < this.stuffToPerform.length; i++) {
-            const result = await this.stuffToPerform[i]()
-            if (result === 'FAIL')
-                break
-        }
+        // for (var i = 0; i < this.stuffToPerform.length; i++) {
+        //     const result = await this.stuffToPerform[i]()
+        //     if (result === 'FAIL')
+        //         break
+        // }
+        dbService.init()
 
         if (this.state.statusCode === 'OK')
             this.props.history.replace('dashboard')

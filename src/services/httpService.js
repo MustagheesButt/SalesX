@@ -22,8 +22,13 @@ function setJwt(jwt) {
     axios.defaults.headers.common['x-auth-token'] = jwt
 }
 
+function unsetJwt(jwt) {
+    delete axios.defaults.headers.common['x-auth-token']
+}
+
 export default {
     get: axios.get,
     post: axios.post,
-    setJwt
+    setJwt,
+    unsetJwt
 }

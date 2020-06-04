@@ -1,14 +1,38 @@
 .btn {
-    color: #5198e2;
-    margin: auto 15px auto 0;
+    background-color: transparent;
+    font-size: 16px;
+    border: none;
+    margin: 0;
+    margin-left: 15px;
     cursor: pointer;
     transition: 0.5s;
+}
+
+.btn:first-of-type {
+    margin-left: 0;
 }
 
 .btn:focus {
     outline: none;
 }
 
-.btn:hover {
+.btn-default {
+    color: #5198e2;
+}
+
+.btn-default:hover {
     color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-ghost {
+    background-color: rgba(200, 200, 200, 0.4);
+    font-size: 24px;
+    padding: 15px;
+    border: 2px solid aliceblue;
+    color: aliceblue;
+}
+
+.btn-ghost:hover {
+    background-color: #5c49b5;
+    border-color: #5c49b5;
 }

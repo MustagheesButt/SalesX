@@ -7,7 +7,6 @@ class InvoiceItem extends React.Component {
 
         this.state = {
             id: props.id,
-            _id: props.id,
             name: props.name,
             price: props.price,
             quantity: props.quantity,

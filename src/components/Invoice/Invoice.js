@@ -3,8 +3,7 @@ import InvoiceItem from './InvoiceItem'
 import XButton from '../common/xui/xbutton'
 
 import notificationService, { CASH_IN } from '../../services/notificationService'
-import http from '../../services/httpService'
-import authService from '../../services/authService'
+import dbService from '../../services/dbService'
 import XInput from '../common/xui/xinput'
 import XSelect from '../common/xui/xselect'
 
@@ -20,6 +19,18 @@ class Invoice extends React.Component {
             paymentMethods: ['Cash', 'Credit/Debit Card', 'Paypal'],
             paymentMethod: 0
         }
+    }
+
+    componentDidMount() {
+        // Listen for, and handle, itemclicked event
+        document.addEventListener('itemclicked', (e) => {
+            this.addItem(e.itemData)
+        })
+
+        // Listen for, and handle, barcode scan event
+        document.addEventListener('barcode-scanned', (e) => {
+            this.addItem(e.itemData)
+        })
     }
 
     render() {
@@ -42,22 +53,48 @@ class Invoice extends React.Component {
         if (this.state.amountPaid < this.calculateTotalPayment())
             return notificationService.alertDanger('Not enough funds to complete transaction!')
 
+        // store in Invoice table
         try {
-            await http.post('/invoices', {
-                items: this.state.items,
+            const trx = dbService.getDb().createTransaction()
+
+            const invoiceSchema = dbService.table('Invoice')
+            const invoiceItemSchema = dbService.table('Invoice_Item')
+
+            const invoiceRow = invoiceSchema.createRow({
                 discount: this.state.discount,
-                paymentMethod: this.state.paymentMethod,
-                amountPaid: this.state.amountPaid,
-                employeeId: authService.getCurrentUser()._id,
-                branchId: authService.getCurrentUser().branchId
+                payment_method: this.state.paymentMethod,
+                amount_paid: this.state.amountPaid,
+                created_at: new Date(),
+                sync_pending: true
             })
+
+            const q1 = dbService.getDb().insertOrReplace().into(invoiceSchema).values([invoiceRow])
+
+            await trx.begin([invoiceSchema, invoiceItemSchema])
+            const results = await trx.attach(q1)
+
+            const rows = this.state.items.map((item) => {
+                return invoiceItemSchema.createRow({
+                    invoice_id: results[0].id,
+                    item_id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    discount: item.discount
+                })
+            })
+
+            const q2 = dbService.getDb().insertOrReplace().into(invoiceItemSchema).values(rows)
+            await trx.attach(q2)
+
+            await trx.commit()
 
             notificationService.alertSuccess('Transaction completed!')
             notificationService.alertAudio(CASH_IN)
             this.reset()
-        } catch ({ response }) {
-            console.log(response)
-            notificationService.alertDanger(response)
+        } catch (ex) {
+            console.log(ex)
+            notificationService.alertDanger(ex.toString())
         }
     }
 
@@ -75,18 +112,6 @@ class Invoice extends React.Component {
 
         this.setState({
             items: arr
-        })
-    }
-
-    componentDidMount() {
-        // Listen for, and handle, itemclicked event
-        document.addEventListener('itemclicked', (e) => {
-            this.addItem(e.itemData)
-        })
-
-        // Listen for, and handle, barcode scan event
-        document.addEventListener('barcode-scanned', (e) => {
-            this.addItem(e.itemData)
         })
     }
 
@@ -126,7 +151,7 @@ class Invoice extends React.Component {
     renderItems() {
         const total = this.calculateTotalPayment()
         const items = this.state.items.map((item, index) => {
-            return <InvoiceItem key={item.id} id={item.id} _id={item._id} name={item.name} price={item.price} quantity={item.quantity} discount={item.discount} removeHandler={() => this.remove(index)} />
+            return <InvoiceItem key={item.id} id={item.id} name={item.name} price={item.price} quantity={item.quantity} discount={item.discount} removeHandler={() => this.remove(index)} />
         })
 
         const paymentOptions = this.state.paymentMethods.map((item, index) => {

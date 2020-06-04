@@ -1,4 +1,5 @@
 import jwtDecode from 'jwt-decode'
+
 import http from './httpService'
 
 const apiEndpoint = '/auth/employee'
@@ -6,16 +7,24 @@ const apiEndpoint = '/auth/employee'
 http.setJwt(getJwt())
 
 async function login(emailOrPhone, password) {
-    const { data: jwt } = await http.post(apiEndpoint, { emailOrPhone, password })
-    localStorage.setItem('jwt', jwt)
+    try {
+        const { data: jwt } = await http.post(apiEndpoint, { emailOrPhone, password })
+        http.setJwt(jwt)
+        localStorage.setItem('jwt', jwt)
+    } catch (ex) {
+        if (ex.response)
+            console.log(ex.response.status, ex.response.data)
+        else
+            console.log(ex)
+    }
 }
 
 function loginWithJwt(jwt) {
     localStorage.setItem('jwt', jwt)
 }
 
-async function logout() {
-    await http.get(`${apiEndpoint}/logout`)
+function logout() {
+    http.unsetJwt()
     localStorage.removeItem('jwt')
 }
 

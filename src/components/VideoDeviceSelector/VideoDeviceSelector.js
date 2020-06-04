@@ -26,7 +26,7 @@ class VideoDeviceSelector extends React.Component {
 
     updateSelectedDevice(index) {
         this.setState({ selectedDevice: index }, async () => {
-            const response = await http.post('/input-video-device', {
+            const response = await http.post('http://localhost:3005/input-video-device', {
                 videoInputDevice: this.state.videoDevices[index].label
             })
 
@@ -46,7 +46,7 @@ class VideoDeviceSelector extends React.Component {
     async componentDidMount() {
         this.updateVideoDevices()
 
-        const { data } = await http.get('/input-video-device')
+        const { data } = await http.get('http://localhost:3005/input-video-device')
         this.setState({ inputVideoDeviceId: data.inputVideoDeviceId })
     }
 

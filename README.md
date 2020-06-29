@@ -1,32 +1,23 @@
 ## Introduction
 
-SalesX is a next-gen Point of Sales system, built using Electron and M(ySQL)ERN stack. 
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+SalesX is a next-gen Point of Sales system, built using Electron and L(ovefield)ERN stack. 
 
 ## Getting Started
 
 To setup and run the program:
 
 1. Make sure you have NodeJS installed and updated.
-2. MySQL installed and running.
-3. Create a new MySQL user `salesx` using the following query:
-
-    `CREATE USER 'salesx'@'localhost' IDENTIFIED WITH mysql_native_password BY '<password>';`
-
-    Use the same password in `public/config.json`.
-
-3. From the project root directory, run:
+2. From the project root directory, run:
 
     `npm install`
 
     This will install all the required dependencies.
 
-4. (optional) To start only React version, run:
+3. To start React-only version, run:
 
     `npm run react-start`
-
-5. To start the complete app, run:
+    
+    To start the complete app, run:
 
     `npm run start`
 

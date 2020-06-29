@@ -1,7 +1,8 @@
 import React from 'react'
 import { BrowserQRCodeReader } from '@zxing/library'
 
-import http from '../../services/httpService'
+import XSelect from '../common/xui/xselect'
+
 
 class VideoDeviceSelector extends React.Component {
     constructor(props) {
@@ -17,24 +18,23 @@ class VideoDeviceSelector extends React.Component {
 
     async updateVideoDevices() {
         try {
-            const videoInputDevices = await this.codeReader.listVideoInputDevices()
-            this.setState({ videoDevices: videoInputDevices }, this.renderVideo)
+            const videoDevices = await this.codeReader.listVideoInputDevices()
+            videoDevices.unshift({ deviceId: -1, label: 'None' })
+            this.setState({ videoDevices })
         } catch (ex) {
             console.error(ex)
         }
     }
 
     updateSelectedDevice(index) {
-        this.setState({ selectedDevice: index }, async () => {
-            const response = await http.post('http://localhost:3005/input-video-device', {
-                videoInputDevice: this.state.videoDevices[index].label
-            })
-
-            console.log(response)
-        })
+        this.codeReader.stopStreams()
+        localStorage.setItem('videoDeviceId', this.state.videoDevices[index].label)
+        this.setState({ selectedDevice: index }, this.renderVideo)
     }
 
     async renderVideo() {
+        if (this.state.videoDevices[this.state.selectedDevice].deviceId === -1) return
+
         try {
             const result = await this.codeReader.decodeOnceFromVideoDevice(this.state.videoDevices[this.state.selectedDevice].deviceId, 'video')
             console.log(result.text)
@@ -44,28 +44,34 @@ class VideoDeviceSelector extends React.Component {
     }
 
     async componentDidMount() {
-        this.updateVideoDevices()
+        await this.updateVideoDevices()
 
-        const { data } = await http.get('http://localhost:3005/input-video-device')
-        this.setState({ inputVideoDeviceId: data.inputVideoDeviceId })
+        const selectedDevice = localStorage.getItem('videoDeviceId')
+        const i = this.state.videoDevices.findIndex(device => device.label === selectedDevice)
+        console.log(i)
+        this.setState({ selectedDevice: (i > -1) ? i : 0 }, this.renderVideo)
     }
 
     render() {
-        const options = this.state.videoDevices.map(device => {
+        const { videoDevices, selectedDevice } = this.state
+
+        const options = videoDevices.map(device => {
             return <option key={device.deviceId} value={device.deviceId}>{device.label}</option>
         })
 
         return (
             <div>
-                <video
-                    id="video"
-                    width="300"
-                    height="200"
-                    style={{ border: '1px solid gray' }}></video>
+                {videoDevices[selectedDevice]?.deviceId !== -1 &&
+                    <video
+                        id="video"
+                        width="300"
+                        height="200"
+                        style={{ border: '1px solid gray' }}></video>}
 
-                <select onChange={(e) => { this.updateSelectedDevice(e.target.selectedIndex) }}>
-                    {options}
-                </select>
+                <XSelect
+                    options={options}
+                    value={videoDevices[selectedDevice]?.deviceId}
+                    onChange={(e) => { this.updateSelectedDevice(e.target.selectedIndex) }} />
             </div>
         )
     }

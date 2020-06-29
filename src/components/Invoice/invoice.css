@@ -1,0 +1,5 @@
+@media print {
+    .items-list, video, header, footer {
+        display: none !important;
+    }
+}

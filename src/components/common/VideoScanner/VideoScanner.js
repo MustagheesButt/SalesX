@@ -1,7 +1,6 @@
 import React from 'react'
 import { BrowserBarcodeReader, NotFoundException, ChecksumException, FormatException } from '@zxing/library'
 
-import http from '../../../services/httpService'
 import notificationService from '../../../services/notificationService'
 
 class VideoScanner extends React.Component {
@@ -24,14 +23,18 @@ class VideoScanner extends React.Component {
 
     async setupVideoScanner() {
         const videoInputDevices = await this.codeReader.listVideoInputDevices()
+        const videoInputDevice = localStorage.getItem('videoDeviceId')
+
         if (!videoInputDevices) {
             notificationService.alertWarning('No video input device found!')
             return this.setState({ videoInputDevice: null })
+        } else if (videoInputDevice === 'None') {
+            notificationService.alertInfo('Video scanner is disabled.')
+            return this.setState({ videoInputDevice: null })
         }
 
-        const { data } = await http.get('http://localhost:3005/input-video-device')
-        if (data.videoInputDevice !== null) {
-            let savedDevice = videoInputDevices.find(device => device.label === data.videoInputDevice)
+        if (videoInputDevice !== null) {
+            let savedDevice = videoInputDevices.find(device => device.label === videoInputDevice)
             if (!savedDevice) {
                 notificationService.alertInfo('Could not find saved device. Using default video input device!')
                 this.setState({ videoInputDevice: videoInputDevices[0] })

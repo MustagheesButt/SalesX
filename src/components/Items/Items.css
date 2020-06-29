@@ -2,7 +2,3 @@
     width: 100%;
     text-align: center;
 }
-
-.items-table tr {
-    background-color: linear-gradient(to bottom, #b7deed 0%,#71ceef 50%,#21b4e2 51%,#b7deed 100%);;
-}

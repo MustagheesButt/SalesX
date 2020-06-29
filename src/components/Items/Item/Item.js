@@ -24,11 +24,12 @@ class Item extends React.Component {
     }
 
     render() {
+        const { name, price, quantity } = this.state
         return (
             <tr className='item'>
-                <td>{this.state.name}</td>
-                <td>{this.state.price}</td>
-                <td>{this.state.quantity}</td>
+                <td>{name}</td>
+                <td>{price}</td>
+                <td>{quantity}</td>
                 <td><XButton text='Add' clickHandler={() => this.itemClicked()} title='Click to add to invoice' /></td>
             </tr>
         )

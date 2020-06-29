@@ -17,22 +17,6 @@ app.get('/', (req, res) => {
     res.send('Hello world')
 })
 
-/* Configuration API */
-app.route('/input-video-device')
-    .get((req, res) => {
-        const json = readJson('config.json')
-
-        res.send(json)
-    })
-    .post((req, res) => {
-        if (req.body.videoInputDevice) {
-            writeJson('config.json', req.body)
-            res.send('saved')
-        } else {
-            res.status(400).send('malformed request')
-        }
-    })
-
 server.listen(PORT, () => console.log(`Express server listening on port ${PORT}`))
 
 /* Global utility */

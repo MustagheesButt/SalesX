@@ -2,3 +2,7 @@
     grid-column: span 8;
     min-height: 400px;
 }
+
+.items-table tr.low {
+    color: #ff3333;
+}

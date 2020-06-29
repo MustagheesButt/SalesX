@@ -1,6 +1,6 @@
 import axios from 'axios'
 import logger from './logService'
-import notificationService from './notificationService'
+//import notificationService from './notificationService'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -12,7 +12,7 @@ axios.interceptors.response.use(null, error => {
 
     if (!expectedError) {
         logger.log(error)
-        notificationService.alertDanger('An unexpected error occured.')
+        //notificationService.alertDanger('An unexpected error occured.')
     }
 
     return Promise.reject(error)

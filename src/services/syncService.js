@@ -3,6 +3,16 @@ import authService from './authService'
 import dbService from './dbService'
 
 
+async function testConnection() {
+    try {
+        await http.get('/')
+        return 1
+    } catch(ex) {
+        console.log(ex.message)
+        return -1
+    }
+}
+
 async function syncItems() {
     try {
         const itemSchema = dbService.table('Item')
@@ -123,5 +133,6 @@ async function syncInvoices() {
 export default {
     syncItems,
     syncInventory,
-    syncInvoices
+    syncInvoices,
+    testConnection
 }

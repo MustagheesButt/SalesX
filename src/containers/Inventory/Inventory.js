@@ -52,12 +52,13 @@ class Settings extends React.Component {
             const filterValue = this.state.filter.toLowerCase()
             return !(item.name.toLowerCase().indexOf(filterValue) === -1 && item.id.indexOf(filterValue) === -1 && item.barcode.indexOf(filterValue) === -1)
         }).map((item, index) => {
+            const quantity = this.state.inventory[index]?.quantity
             return (
-                <tr key={item.id}>
+                <tr key={item.id} className={`${quantity < 10 ? 'low' : ''}`}>
                     <td>{item.id}</td>
                     <td>{item.barcode}</td>
                     <td>{item.name}</td>
-                    <td>{this.state.inventory[index]?.quantity || 'N/A'}</td>
+                    <td>{quantity || 'N/A'}</td>
                 </tr>
             )
         })

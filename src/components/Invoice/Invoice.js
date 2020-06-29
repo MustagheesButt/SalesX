@@ -7,6 +7,8 @@ import dbService from '../../services/dbService'
 import XInput from '../common/xui/xinput'
 import XSelect from '../common/xui/xselect'
 
+import './invoice.css'
+
 class Invoice extends React.Component {
     constructor(props) {
         super(props)
@@ -96,6 +98,10 @@ class Invoice extends React.Component {
             console.log(ex)
             notificationService.alertDanger(ex.toString())
         }
+    }
+
+    printReceipt() {
+        window.print()
     }
 
     reset() {
@@ -196,7 +202,7 @@ class Invoice extends React.Component {
 
                 <div className='flex-container'>
                     <XButton text='Complete Transaction' clickHandler={() => this.completeTransacation()} />
-                    <XButton text='Print' />
+                    <XButton text='Print' clickHandler={() => this.printReceipt()} />
                     <XButton text='Clear' clickHandler={() => this.reset()} />
                 </div>
             </React.Fragment>

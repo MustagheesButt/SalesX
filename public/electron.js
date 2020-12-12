@@ -57,7 +57,10 @@ app.whenReady().then(() => {
     let mainWindow = createWindowMain(false)
     let splashWindow = createSplashWindow('splash.html')
 
-    splashWindow.once('ready-to-show', () => splashWindow.show())
+    splashWindow.once('ready-to-show', () => {
+        splashWindow.show()
+        setTimeout(() => splashWindow.destroy(), 2500)
+    })
 
     splashWindow.once('closed', () => {
         mainWindow.show()

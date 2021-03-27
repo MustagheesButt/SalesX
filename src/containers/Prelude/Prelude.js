@@ -9,7 +9,7 @@ import './Prelude.css'
 
 const apiEndpoint = '/prelude'
 
-// TODO: better move all this checking to 'splash.html'. Makes much more sense.
+// TODO: Clean up. Most of this is legacy and not in use anymore
 class Prelude extends React.Component {
     constructor(props) {
         super(props)

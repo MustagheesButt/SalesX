@@ -1,11 +1,13 @@
 import React from 'react'
-import InvoiceItem from './InvoiceItem'
-import XButton from '../common/xui/xbutton'
 
 import notificationService, { CASH_IN } from '../../services/notificationService'
 import dbService from '../../services/dbService'
+import printService from '../../services/printService'
+
 import XInput from '../common/xui/xinput'
 import XSelect from '../common/xui/xselect'
+import XButton from '../common/xui/xbutton'
+import InvoiceItem from './InvoiceItem'
 
 import './invoice.css'
 

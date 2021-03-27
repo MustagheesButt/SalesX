@@ -26,9 +26,11 @@ function unsetJwt(jwt) {
     delete axios.defaults.headers.common['x-auth-token']
 }
 
-export default {
+const logService = {
     get: axios.get,
     post: axios.post,
     setJwt,
     unsetJwt
 }
+
+export default logService

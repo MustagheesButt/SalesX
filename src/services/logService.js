@@ -3,6 +3,8 @@ function log(msg) {
     console.log(msg)
 }
 
-export default {
+const logService = {
     log
 }
+
+export default logService

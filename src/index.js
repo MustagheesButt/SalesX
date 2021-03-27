@@ -9,7 +9,7 @@ import './index.css'
 
 
 dbService.init().then(() => {
-    console.log('Database initialized')
+    console.info('Database initialized')
     ReactDOM.render(<App />, document.getElementById('root'))
 })
 

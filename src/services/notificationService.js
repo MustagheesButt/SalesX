@@ -27,10 +27,12 @@ function alertAudio(name) {
     audioService.play(name)
 }
 
-export default {
+const notificationService = {
     alertInfo,
     alertWarning,
     alertSuccess,
     alertDanger,
     alertAudio
 }
+
+export default notificationService

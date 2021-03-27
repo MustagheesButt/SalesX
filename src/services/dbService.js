@@ -58,8 +58,10 @@ function getDb() {
     return salesxDb
 }
 
-export default {
+const dbService = {
     init,
     table,
     getDb
 }
+
+export default dbService

@@ -130,9 +130,11 @@ async function syncInvoices() {
     }
 }
 
-export default {
+const syncService = {
     syncItems,
     syncInventory,
     syncInvoices,
     testConnection
 }
+
+export default syncService

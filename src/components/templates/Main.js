@@ -7,7 +7,7 @@ import StatusContext from '../contexts/StatusContext'
 import authService from '../../services/authService'
 
 const Main = ({ children }) => {
-    const { syncStatus, cloudConnectionStatus } = useContext(StatusContext)
+    const { syncStatus, cloudConnectionStatus, printServiceStatus } = useContext(StatusContext)
 
     const currentEmployee = authService.getCurrentUser()
 
@@ -27,6 +27,7 @@ const Main = ({ children }) => {
             <footer>
                 <StatusLight state={syncStatus} label='syncing' tooltip={'Ready to sync'} />
                 <StatusLight state={cloudConnectionStatus} label='cloud connection' tooltip={'Secure & ready'} />
+                <StatusLight state={printServiceStatus} label='print service' tooltip={'Waiting for connection'} />
             </footer>
         </div>
     )

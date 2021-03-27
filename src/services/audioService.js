@@ -4,6 +4,8 @@ function play(name) {
     audio.play()
 }
 
-export default {
+const audioService = {
     play
 }
+
+export default audioService
